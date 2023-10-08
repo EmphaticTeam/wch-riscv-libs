@@ -10,7 +10,7 @@
 #ifndef __GPIO__H__
 #define __GPIO__H__
 
-#include "Common.hpp"
+#include "Common.h"
 
 namespace ch32v_lib
 {
