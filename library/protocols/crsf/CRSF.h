@@ -23,32 +23,24 @@ enum CRSF_FrameId : u8
     REQUEST_SETTINGS_ID = 0x2A,
 };
 
-typedef struct
+typedef struct __attribute__((packed))
 {
-    u8 deviceAddress;
-    u8 length;
-    CRSF_FrameId frameId;
-} CRSF_Frame;
-
-
-typedef struct
-{
-    u16 ch0 : 11;
-    u16 ch1 : 11;
-    u16 ch2 : 11;
-    u16 ch3 : 11;
-    u16 ch4 : 11;
-    u16 ch5 : 11;
-    u16 ch6 : 11;
-    u16 ch7 : 11;
-    u16 ch8 : 11;
-    u16 ch9 : 11;
-    u16 ch10 : 11;
-    u16 ch11 : 11;
-    u16 ch12 : 11;
-    u16 ch13 : 11;
-    u16 ch14 : 11;
-    u16 ch15 : 11;
+    s16 ch0 : 11;
+    s16 ch1 : 11;
+    s16 ch2 : 11;
+    s16 ch3 : 11;
+    s16 ch4 : 11;
+    s16 ch5 : 11;
+    s16 ch6 : 11;
+    s16 ch7 : 11;
+    s16 ch8 : 11;
+    s16 ch9 : 11;
+    s16 ch10 : 11;
+    s16 ch11 : 11;
+    s16 ch12 : 11;
+    s16 ch13 : 11;
+    s16 ch14 : 11;
+    s16 ch15 : 11;
 } CRSF_ChannelsFrame;
 
 #endif  //!__CRSF__H__
