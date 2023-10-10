@@ -1,0 +1,6 @@
+
+MCU = -march=rv32imac -mabi=ilp32 -msmall-data-limit=8 -msave-restore \
+-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common 
+
+LDSCRIPT = $(WCH_LIBS_PATH)/components/ch32v30x/Link.ld
+
