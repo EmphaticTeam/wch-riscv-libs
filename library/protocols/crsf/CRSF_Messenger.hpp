@@ -17,14 +17,17 @@ namespace ch32v_lib::protocols
         CRSF_Callback messageCallback;
 
         void Init(interfaces::Usart *usart);
-        static void InitCRC8(uint8_t polynomial);
         void UsartCallback(u8 *data, u32 len);
-        static s16 Uint11ToInt16(u16 value);
-        static CRC8 crc8;
+
+        static s16 Uint11ToInt16(u16 value)
+        {
+            return (s16)value - 1024;
+        }
 
     private:
         u16 _counterChars;
         u32 _timeCounterUs;
+        static CRC8 crc8;
     };
 }
 
