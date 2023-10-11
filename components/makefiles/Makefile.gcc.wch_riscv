@@ -92,18 +92,17 @@ vpath %.cpp $(sort $(dir $(CPP_SRC)))
 
 $(OBJ_DIR)/%.o: %.s Makefile | $(OBJ_DIR)
 	$(AS) -c $(ASM_COMPILER_FLAGS) $< -o $@
-	@echo $(notdir $(AS)): $< 
+	@echo $(notdir $(AS)): $(notdir $<) 
 	
 $(OBJ_DIR)/%.o: %.c Makefile | $(OBJ_DIR)
 	$(CC) -c $(C_COMPILER_FLAGS) -Wa,-a,-ad,-alms=$(OBJ_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-	@echo $(notdir $(CC)): $<
+	@echo $(notdir $(CC)): $(notdir $<) 
 
 $(OBJ_DIR)/%.o: %.cpp Makefile | $(OBJ_DIR)
 	$(CXX) -c $(CXX_COMPILER_FLAGS) -Wa,-a,-ad,-alms=$(OBJ_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-	@echo $(notdir $(CXX)): $< 
+	@echo $(notdir $(CXX)): $(notdir $<) 
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	@echo $(CPP_SRC)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ 
 	$(SZ) $@
 

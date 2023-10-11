@@ -5,6 +5,8 @@ OPTIMIZATION = -O0
 
 PROJ_PATH = $(CURDIR)/..
 WCH_LIBS_PATH = $(PROJ_PATH)/../../..
+
+# These paths should point to the tools hosted on your system
 GCC_PATH = A:/Tools/riscv-none-embed-gcc
 OPENOCD_PATH = A:/Tools/openocd_wch
 
@@ -26,5 +28,4 @@ $(WCH_LIBS_PATH)/components/ch32v30x/hal
 DEFINES = \
 
 -include $(WCH_LIBS_PATH)/components/ch32v30x/Makefile.mcu
--include $(WCH_LIBS_PATH)/components/makefiles/Makefile.gcc.riscv
-
+-include $(WCH_LIBS_PATH)/components/makefiles/Makefile.gcc.wch_riscv
