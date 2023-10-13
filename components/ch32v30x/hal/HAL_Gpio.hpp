@@ -7,8 +7,8 @@
 /// Copyright (c) 2023
 /// 
 
-#ifndef __GPIO__H__
-#define __GPIO__H__
+#ifndef __HAL_GPIO__H__
+#define __HAL_GPIO__H__
 
 #include "Common.h"
 
@@ -50,4 +50,4 @@ namespace ch32v_lib
     };
 }
 
-#endif  //!__GPIO__H__
+#endif  //!__HAL_GPIO__H__

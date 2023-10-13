@@ -1,0 +1,125 @@
+#######################################
+# Flags
+#######################################
+COMPILER_FLAGS = $(MCU) $(addprefix -I,$(INCLUDE_PATHS)) $(addprefix -D,$(DEFINES)) $(OPTIMIZATION)
+COMPILER_FLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+COMPILER_FLAGS += -Wall -Wno-comment
+
+ifeq ($(DEBUG), 1) 
+COMPILER_FLAGS += -g -gdwarf-2 
+endif
+
+C_COMPILER_FLAGS = $(COMPILER_FLAGS) -std=c17
+CXX_COMPILER_FLAGS = $(COMPILER_FLAGS) -std=c++17 -fno-exceptions -fno-rtti
+ASM_COMPILER_FLAGS = $(COMPILER_FLAGS) 
+
+#######################################
+# Compiler utils
+#######################################
+PREFIX = riscv-none-embed-
+ifdef GCC_PATH
+CC = $(GCC_PATH)/bin/$(PREFIX)gcc
+CXX = $(GCC_PATH)/bin/$(PREFIX)g++
+AS = $(GCC_PATH)/bin/$(PREFIX)gcc -x assembler-with-cpp
+CP = $(GCC_PATH)/bin/$(PREFIX)objcopy
+SZ = $(GCC_PATH)/bin/$(PREFIX)size
+OBJDUMP = $(GCC_PATH)/bin/$(PREFIX)objdump
+else
+CC = $(PREFIX)gcc
+CXX = $(PREFIX)g++
+AS = $(PREFIX)gcc -x assembler-with-cpp
+CP = $(PREFIX)objcopy
+SZ = $(PREFIX)size
+OBJDUMP = $(PREFIX)objdump
+endif
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
+
+#######################################
+# Linker 
+#######################################
+LDFLAGS = $(COMPILER_FLAGS) -T$(LDSCRIPT) -nostartfiles -Xlinker --gc-sections \
+-Wl,-Map,$(BUILD_DIR)/$(TARGET).map --specs=nano.specs --specs=nosys.specs
+
+#######################################
+# Tasks 
+#######################################
+.SILENT:
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).lst
+
+fload:
+	$(OPENOCD_PATH)/bin/openocd.exe \
+		-f wch/wch-riscv.cfg \
+		-c init \
+		-c halt \
+		-c "program $(BUILD_DIR)/$(TARGET).hex" \
+		-c reset \
+		-c exit
+
+ferase:
+	$(OPENOCD_PATH)/bin/openocd.exe \
+		-f wch/wch-riscv.cfg \
+		-c init \
+		-c halt \
+		-c "flash erase_sector wch_riscv 0 last" \
+		-c exit
+
+reset:
+	$(OPENOCD_PATH)/bin/openocd.exe \
+		-f wch/wch-riscv.cfg \
+		-c init \
+		-c "reset init" \
+		-c halt \
+		-c wlink_reset_resume \
+		-c exit
+
+clean:
+	del /Q $(BUILD_DIR)
+
+#######################################
+# Build 
+#######################################
+OBJ_DIR := $(BUILD_DIR)/obj
+ASM_SRC = $(filter %.s, $(SOURCE_FILES))
+C_SRC = $(filter %.c, $(SOURCE_FILES))
+CPP_SRC = $(filter %.cpp, $(SOURCE_FILES))
+OBJECTS = $(addprefix $(OBJ_DIR)/,$(notdir $(ASM_SRC:.s=.o)))
+OBJECTS += $(addprefix $(OBJ_DIR)/,$(notdir $(C_SRC:.c=.o)))
+OBJECTS += $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_SRC:.cpp=.o)))
+vpath %.s $(sort $(dir $(ASM_SRC)))
+vpath %.c $(sort $(dir $(C_SRC)))
+vpath %.cpp $(sort $(dir $(CPP_SRC)))
+
+$(OBJ_DIR)/%.o: %.s Makefile | $(OBJ_DIR)
+	$(AS) -c $(ASM_COMPILER_FLAGS) $< -o $@
+	@echo $(notdir $(AS)): $(notdir $<) 
+	
+$(OBJ_DIR)/%.o: %.c Makefile | $(OBJ_DIR)
+	$(CC) -c $(C_COMPILER_FLAGS) -Wa,-a,-ad,-alms=$(OBJ_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@echo $(notdir $(CC)): $(notdir $<) 
+
+$(OBJ_DIR)/%.o: %.cpp Makefile | $(OBJ_DIR)
+	$(CXX) -c $(CXX_COMPILER_FLAGS) -Wa,-a,-ad,-alms=$(OBJ_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	@echo $(notdir $(CXX)): $(notdir $<) 
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ 
+	$(SZ) $@
+
+$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf $(BUILD_DIR)
+	$(HEX) $< $@ 
+
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf $(BUILD_DIR)
+	$(BIN) $< $@ 
+
+$(BUILD_DIR)/$(TARGET).lst: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)
+	$(OBJDUMP) -S -D $< > $@ 
+
+$(OBJ_DIR): $(BUILD_DIR) 
+	cd $(BUILD_DIR)  && if not exist $(notdir $@) mkdir $(notdir $@)
+
+$(BUILD_DIR):
+	if not exist $(notdir $@) mkdir $(notdir $@)
+
+-include $(wildcard $(OBJ_DIR)/*.d)
+

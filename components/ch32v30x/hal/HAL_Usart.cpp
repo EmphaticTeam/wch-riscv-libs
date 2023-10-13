@@ -7,7 +7,7 @@
 /// Copyright (c) 2023
 ///
 
-#include "Usart.hpp"
+#include "HAL_Usart.hpp"
 
 #define TX_TIMEOUT 10000
 

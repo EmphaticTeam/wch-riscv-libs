@@ -25,9 +25,4 @@ namespace ch32v_lib::protocols
 
         this->usart->ReceiveUntilIdle();
     }
-
-    s16 CRSFMessenger::Uint11ToInt16(u16 value)
-    {
-        return (s16)value - 1024;
-    }
 }
