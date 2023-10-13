@@ -1,5 +1,5 @@
-#ifndef __TIMERBASIC__H__
-#define __TIMERBASIC__H__
+#ifndef __HAL_TIMERBASIC__H__
+#define __HAL_TIMERBASIC__H__
 
 #include "Common.h"
 
@@ -54,4 +54,4 @@ namespace ch32v_lib::timers
     };
 }
 
-#endif  //!__TIMERBASIC__H__
+#endif  //!__HAL_TIMERBASIC__H__

@@ -1,8 +1,8 @@
-#ifndef __TIMERGENERAL__H__
-#define __TIMERGENERAL__H__
+#ifndef __HAL_TIMERGENERAL__H__
+#define __HAL_TIMERGENERAL__H__
 
 #include "Common.h"
-#include "TimerBasic.hpp"
+#include "HAL_TimerBasic.hpp"
 
 namespace ch32v_lib::timers
 {
@@ -15,4 +15,4 @@ namespace ch32v_lib::timers
     };
 }
 
-#endif  //!__TIMERGENERAL__H__
+#endif  //!__HAL_TIMERGENERAL__H__

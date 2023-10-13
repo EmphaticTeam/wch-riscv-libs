@@ -7,7 +7,7 @@
 /// Copyright (c) 2023
 /// 
 
-#include "Gpio.hpp"
+#include "HAL_Gpio.hpp"
 
 namespace ch32v_lib
 {

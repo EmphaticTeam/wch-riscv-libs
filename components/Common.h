@@ -23,4 +23,23 @@
 
 #define UNUSED(x)   ((void)x)
 
+#define ALWAYS_INLINE __attribute__((always_inline))
+
+static inline ErrorStatus WaitForReadyFlag(u32* reg, u32 flagMask, FlagStatus expectState, u32 timeout)
+{
+    __IO u32 _counter = 0;
+    FlagStatus flagStatus = RESET;
+
+    do
+    {
+        flagStatus = ((*reg & flagMask) == flagMask) ? SET : RESET;
+        _counter++;
+    } while ((_counter < timeout) && (flagStatus != expectState));
+
+    if (flagStatus == expectState)
+        return READY;
+    else
+        return NoREADY;
+}
+
 #endif  //!__COMMON__H__

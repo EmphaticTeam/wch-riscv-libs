@@ -1,6 +1,6 @@
 #include "Common.h"
-#include "Gpio.hpp"
-#include "TimerBasic.hpp"
+#include "HAL_Gpio.hpp"
+#include "HAL_TimerBasic.hpp"
 
 using namespace ch32v_lib;
 using namespace ch32v_lib::timers;

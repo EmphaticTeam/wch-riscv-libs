@@ -3,7 +3,7 @@
 
 #include "Common.h"
 #include "CRSF.h"
-#include "Usart.hpp"
+#include "HAL_Usart.hpp"
 #include "CRC8.hpp"
 
 namespace ch32v_lib::protocols

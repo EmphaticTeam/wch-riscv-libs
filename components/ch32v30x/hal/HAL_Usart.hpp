@@ -7,8 +7,8 @@
 /// Copyright (c) 2023
 ///
 
-#ifndef __USART__H__
-#define __USART__H__
+#ifndef __HAL_USART__H__
+#define __HAL_USART__H__
 
 #include "Common.h"
 
@@ -52,4 +52,4 @@ namespace ch32v_lib::interfaces
     };
 }
 
-#endif //!__USART__H__
+#endif //!__HAL_USART__H__
