@@ -3,6 +3,26 @@
 
 #include "Common.h"
 
+#define RCC_PREDIV1_SRC_HSE             ((u32)0x00000000)
+#define RCC_PREDIV1_SRC_PLL2            ((u32)0x00000001)
+
+#define RCC_PREDIV1_DIV1                ((u32)0x00000000)
+#define RCC_PREDIV1_DIV2                ((u32)0x00000001)
+#define RCC_PREDIV1_DIV3                ((u32)0x00000002)
+#define RCC_PREDIV1_DIV4                ((u32)0x00000003)
+#define RCC_PREDIV1_DIV5                ((u32)0x00000004)
+#define RCC_PREDIV1_DIV6                ((u32)0x00000005)
+#define RCC_PREDIV1_DIV7                ((u32)0x00000006)
+#define RCC_PREDIV1_DIV8                ((u32)0x00000007)
+#define RCC_PREDIV1_DIV9                ((u32)0x00000008)
+#define RCC_PREDIV1_DIV10               ((u32)0x00000009)
+#define RCC_PREDIV1_DIV11               ((u32)0x0000000A)
+#define RCC_PREDIV1_DIV12               ((u32)0x0000000B)
+#define RCC_PREDIV1_DIV13               ((u32)0x0000000C)
+#define RCC_PREDIV1_DIV14               ((u32)0x0000000D)
+#define RCC_PREDIV1_DIV15               ((u32)0x0000000E)
+#define RCC_PREDIV1_DIV16               ((u32)0x0000000F)
+
 namespace ch32v_lib
 {
     class Rcc
@@ -50,23 +70,27 @@ namespace ch32v_lib
             WRITE_REG(RCC->CFGR2, 0x00000000);
         }
 
-        static void EnableHSE()
+        ALWAYS_INLINE static void EnableHSE()
         {
-            CLEAR_BIT(RCC->CTLR, RCC_HSEON | RCC_HSEBYP);
             SET_BIT(RCC->CTLR, RCC_HSEON);
         }
 
-        static void DisableHSE()
+        ALWAYS_INLINE static void DisableHSE()
         {
-            CLEAR_BIT(RCC->CTLR, RCC_HSEON | RCC_HSEBYP);
+            CLEAR_BIT(RCC->CTLR, RCC_HSEON);
         }
 
-        static void EnableBypassHSE()
+        ALWAYS_INLINE static void EnableBypassHSE()
         {
-            SET_BIT(RCC->CTLR, RCC_HSEON | RCC_HSEBYP);
+            SET_BIT(RCC->CTLR, RCC_HSEBYP);
         }
 
-        static void Prediv1Config(u32 source, u32 div)
+        ALWAYS_INLINE static void DisableBypassHSE()
+        {
+            SET_BIT(RCC->CTLR, RCC_HSEBYP);
+        }
+
+        ALWAYS_INLINE static void Prediv1Config(u32 source, u32 div)
         {
 
         }
